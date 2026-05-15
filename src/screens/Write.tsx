@@ -18,7 +18,7 @@ export function Write() {
     content: "",
     editorProps: {
       attributes: {
-        class: "prose prose-indigo max-w-none focus:outline-none min-h-[400px] text-lg",
+        class: "prose prose-indigo dark:prose-invert max-w-none focus:outline-none min-h-[400px] text-lg transition-colors",
       },
     },
   });
@@ -71,7 +71,9 @@ export function Write() {
       onClick={onClick}
       title={title}
       className={`p-2 rounded-lg transition-colors ${
-        isActive ? "bg-indigo-100 text-indigo-600" : "text-gray-400 hover:bg-gray-100 hover:text-gray-600"
+        isActive 
+          ? "bg-indigo-100 dark:bg-indigo-900/40 text-indigo-600 dark:text-indigo-400" 
+          : "text-gray-400 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-600 dark:hover:text-gray-300"
       }`}
     >
       {children}
@@ -85,35 +87,35 @@ export function Write() {
           <div className="flex items-center gap-4">
             <button
               onClick={() => navigate(-1)}
-              className="p-2 rounded-full hover:bg-gray-100 text-gray-500 transition-colors"
+              className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-500 dark:text-gray-400 transition-colors"
             >
               <X className="h-6 w-6" />
             </button>
-            <h1 className="text-xl font-semibold text-gray-900">
+            <h1 className="text-xl font-semibold text-gray-900 dark:text-white transition-colors">
               {id ? "Edit Entry" : "New Entry"}
             </h1>
           </div>
           <button
             onClick={handleSave}
             disabled={isSaving || !title.trim()}
-            className="flex items-center gap-2 rounded-xl bg-indigo-600 px-6 py-2.5 text-sm font-semibold text-white shadow-sm transition-all hover:bg-indigo-700 disabled:opacity-50 active:scale-95"
+            className="flex items-center gap-2 rounded-xl bg-indigo-600 px-6 py-2.5 text-sm font-semibold text-white shadow-sm transition-all hover:bg-indigo-700 disabled:opacity-50 active:scale-95 shadow-indigo-100 dark:shadow-none"
           >
             <Save className="h-4 w-4" />
             {isSaving ? "Saving..." : "Save Entry"}
           </button>
         </header>
 
-        <div className="rounded-3xl bg-white p-6 md:p-10 shadow-sm ring-1 ring-gray-200">
+        <div className="rounded-[40px] bg-white dark:bg-gray-800 p-6 md:p-10 shadow-sm ring-1 ring-gray-200 dark:ring-gray-700 transition-colors">
           <input
             type="text"
             placeholder="Title of your reflection..."
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            className="w-full border-none p-0 text-3xl font-bold text-gray-900 placeholder:text-gray-300 focus:outline-none focus:ring-0 mb-8"
+            className="w-full border-none p-0 text-3xl font-bold text-gray-900 dark:text-white placeholder:text-gray-300 dark:placeholder:text-gray-600 focus:outline-none focus:ring-0 mb-8 bg-transparent transition-colors"
           />
 
           {/* Toolbar */}
-          <div className="sticky top-4 z-20 mb-6 flex flex-wrap items-center gap-1 rounded-2xl bg-gray-50 p-2 border border-gray-100 shadow-sm">
+          <div className="sticky top-4 z-20 mb-6 flex flex-wrap items-center gap-1 rounded-2xl bg-gray-50 dark:bg-gray-900/50 p-2 border border-gray-100 dark:border-gray-700 shadow-sm backdrop-blur-md transition-colors">
             <MenuButton
               onClick={() => editor.chain().focus().toggleBold().run()}
               isActive={editor.isActive("bold")}
@@ -128,7 +130,7 @@ export function Write() {
             >
               <Italic className="h-5 w-5" />
             </MenuButton>
-            <div className="w-px h-6 bg-gray-200 mx-1" />
+            <div className="w-px h-6 bg-gray-200 dark:bg-gray-700 mx-1" />
             <MenuButton
               onClick={() => editor.chain().focus().toggleBulletList().run()}
               isActive={editor.isActive("bulletList")}
@@ -150,7 +152,7 @@ export function Write() {
             >
               <Quote className="h-5 w-5" />
             </MenuButton>
-            <div className="w-px h-6 bg-gray-200 mx-1" />
+            <div className="w-px h-6 bg-gray-200 dark:bg-gray-700 mx-1" />
             <MenuButton
               onClick={() => editor.chain().focus().undo().run()}
               title="Undo"

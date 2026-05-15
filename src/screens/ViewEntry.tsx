@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { db } from "../lib/db";
 import { AnimatedScreen } from "../components/AnimatedScreen";
 import { JournalEntry } from "../types";
+import { Portal } from "../components/Portal";
 
 export function ViewEntry() {
   const { id } = useParams();
@@ -40,48 +41,50 @@ export function ViewEntry() {
       <div className="mx-auto max-w-3xl">
         <AnimatePresence>
           {showDeleteConfirm && (
-            <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                onClick={() => setShowDeleteConfirm(false)}
-                className="absolute inset-0 bg-gray-900/40 backdrop-blur-sm"
-              />
-              <motion.div
-                initial={{ opacity: 0, scale: 0.95, y: 10 }}
-                animate={{ opacity: 1, scale: 1, y: 0 }}
-                exit={{ opacity: 0, scale: 0.95, y: 10 }}
-                className="relative w-full max-w-sm rounded-3xl bg-white p-8 shadow-2xl ring-1 ring-black/5"
-              >
-                <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-2xl bg-red-50 text-red-600">
-                  <AlertCircle className="h-8 w-8" />
-                </div>
-                <h3 className="mb-2 text-xl font-bold text-gray-900">Delete Entry?</h3>
-                <p className="mb-8 text-gray-500">This action cannot be undone. Your reflection will be permanently removed.</p>
-                <div className="flex gap-3">
-                  <button
-                    onClick={() => setShowDeleteConfirm(false)}
-                    className="flex-1 rounded-xl bg-gray-100 px-4 py-3 text-sm font-semibold text-gray-900 transition-colors hover:bg-gray-200"
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    onClick={handleDelete}
-                    className="flex-1 rounded-xl bg-red-600 px-4 py-3 text-sm font-semibold text-white transition-colors hover:bg-red-700 shadow-md shadow-red-200"
-                  >
-                    Delete
-                  </button>
-                </div>
-              </motion.div>
-            </div>
+            <Portal>
+              <div className="fixed inset-0 z-[99999] flex items-center justify-center p-4">
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  onClick={() => setShowDeleteConfirm(false)}
+                  className="fixed inset-0 bg-gray-900/60 backdrop-blur-md"
+                />
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.95, y: 10 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.95, y: 10 }}
+                  className="relative z-[100000] w-full max-w-sm rounded-[32px] bg-white dark:bg-gray-800 p-8 shadow-2xl ring-1 ring-black/5"
+                >
+                  <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-2xl bg-red-50 dark:bg-red-900/30 text-red-600 dark:text-red-400">
+                    <AlertCircle className="h-8 w-8" />
+                  </div>
+                  <h3 className="mb-2 text-xl font-bold text-gray-900 dark:text-white">Delete Entry?</h3>
+                  <p className="mb-8 text-gray-500 dark:text-gray-400 text-sm">This action cannot be undone. Your reflection will be permanently removed.</p>
+                  <div className="flex gap-3">
+                    <button
+                      onClick={() => setShowDeleteConfirm(false)}
+                      className="flex-1 rounded-xl bg-gray-100 dark:bg-gray-700 px-4 py-3 text-sm font-semibold text-gray-900 dark:text-white transition-colors hover:bg-gray-200 dark:hover:bg-gray-600"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      onClick={handleDelete}
+                      className="flex-1 rounded-xl bg-red-600 px-4 py-3 text-sm font-semibold text-white transition-colors hover:bg-red-700 shadow-md shadow-red-200 dark:shadow-none"
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </motion.div>
+              </div>
+            </Portal>
           )}
         </AnimatePresence>
 
         <header className="mb-8 flex items-center justify-between">
           <button
             onClick={() => navigate(-1)}
-            className="flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-900"
+            className="flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium text-gray-500 dark:text-gray-400 transition-colors hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-gray-200"
           >
             <ArrowLeft className="h-4 w-4" />
             Back
@@ -89,7 +92,7 @@ export function ViewEntry() {
           <div className="flex items-center gap-2">
             <button
               onClick={() => setShowDeleteConfirm(true)}
-              className="p-2 rounded-full text-gray-400 hover:bg-red-50 hover:text-red-600 transition-colors"
+              className="p-2 rounded-full text-gray-400 dark:text-gray-500 hover:bg-red-50 dark:hover:bg-red-900/30 hover:text-red-600 dark:hover:text-red-400 transition-colors"
               title="Delete Entry"
             >
               <Trash2 className="h-5 w-5" />
@@ -104,17 +107,17 @@ export function ViewEntry() {
           </div>
         </header>
 
-        <article className="overflow-hidden rounded-3xl bg-white shadow-sm ring-1 ring-gray-200">
-          <div className="aspect-video w-full overflow-hidden bg-gray-100">
+        <article className="overflow-hidden rounded-[40px] bg-white dark:bg-gray-800 shadow-sm ring-1 ring-gray-200 dark:ring-gray-700 transition-colors">
+          <div className="aspect-video w-full overflow-hidden bg-gray-100 dark:bg-gray-700">
             <img
               src={entry.imageUrl}
               alt={entry.title}
-              className="h-full w-full object-cover"
+              className="h-full w-full object-cover transition-opacity duration-300 dark:opacity-90"
             />
           </div>
           
           <div className="px-6 py-8 md:px-12 md:py-12">
-            <div className="mb-6 flex flex-wrap items-center gap-6 text-sm text-gray-400">
+            <div className="mb-6 flex flex-wrap items-center gap-6 text-sm text-gray-400 dark:text-gray-500">
               <div className="flex items-center gap-2">
                 <Calendar className="h-4 w-4" />
                 <span>{new Date(entry.date).toLocaleDateString(undefined, { dateStyle: 'long' })}</span>
@@ -125,19 +128,19 @@ export function ViewEntry() {
               </div>
             </div>
 
-            <h1 className="mb-8 text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">
+            <h1 className="mb-8 text-4xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-5xl transition-colors">
               {entry.title}
             </h1>
 
             <div 
-              className="markdown-body prose prose-indigo max-w-none prose-lg text-gray-600 leading-relaxed"
+              className="markdown-body prose prose-indigo dark:prose-invert max-w-none prose-lg text-gray-600 dark:text-gray-300 leading-relaxed transition-colors"
               dangerouslySetInnerHTML={{ __html: entry.content }}
             />
           </div>
         </article>
 
-        <footer className="mt-12 border-t border-gray-100 pt-8 text-center">
-          <p className="text-sm text-gray-400 italic">
+        <footer className="mt-12 border-t border-gray-100 dark:border-gray-800 pt-8 text-center transition-colors">
+          <p className="text-sm text-gray-400 dark:text-gray-500 italic">
             "We do not learn from experience... we learn from reflecting on experience."
           </p>
         </footer>

@@ -1,13 +1,15 @@
 import Dexie, { type Table } from 'dexie';
-import { JournalEntry } from '../types';
+import { JournalEntry, UserProfile } from '../types';
 
 export class ReflectDatabase extends Dexie {
   entries!: Table<JournalEntry>;
+  settings!: Table<UserProfile>;
 
   constructor() {
     super('ReflectDatabase');
     this.version(1).stores({
-      entries: '++id, date, title' // primary key "id" (auto-incremented), index by "date" and "title"
+      entries: '++id, date, title', // primary key "id" (auto-incremented), index by "date" and "title"
+      settings: 'id'
     });
   }
 }
@@ -15,6 +17,16 @@ export class ReflectDatabase extends Dexie {
 export const db = new ReflectDatabase();
 
 export const seedDatabase = async () => {
+  const settingsCount = await db.settings.count();
+  if (settingsCount === 0) {
+    await db.settings.add({
+      id: 'current_user',
+      name: 'Jane Doe',
+      avatarUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=200',
+      darkMode: false
+    });
+  }
+
   const count = await db.entries.count();
   if (count === 0) {
     const mockEntries: JournalEntry[] = [

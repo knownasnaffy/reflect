@@ -1,3 +1,10 @@
+export interface UserProfile {
+  id: string;
+  name: string;
+  avatarUrl: string;
+  darkMode: boolean;
+}
+
 export interface JournalEntry {
   id?: number;
   title: string;

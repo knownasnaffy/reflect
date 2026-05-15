@@ -15,18 +15,18 @@ export function SharedCard({ id, imageUrl, title, description }: SharedCardProps
     <Link to={`/view/${id}`}>
       <motion.div
         whileHover={{ y: -4 }}
-        className="group relative flex flex-col overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-gray-200 transition-all hover:shadow-md cursor-pointer"
+        className="group relative flex flex-col overflow-hidden rounded-2xl bg-white dark:bg-gray-800 shadow-sm ring-1 ring-gray-200 dark:ring-gray-700 transition-all hover:shadow-md dark:hover:shadow-indigo-900/10 cursor-pointer"
       >
-        <div className="aspect-[4/3] w-full overflow-hidden bg-gray-100">
+        <div className="aspect-[4/3] w-full overflow-hidden bg-gray-100 dark:bg-gray-700">
           <img
             src={imageUrl}
             alt={title}
-            className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+            className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105 dark:opacity-90"
           />
         </div>
         <div className="p-5">
-          <h3 className="text-lg font-semibold text-gray-900 group-hover:text-indigo-600 transition-colors">{title}</h3>
-          <p className="mt-1 line-clamp-2 text-sm text-gray-500">{description}</p>
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">{title}</h3>
+          <p className="mt-1 line-clamp-2 text-sm text-gray-500 dark:text-gray-400">{description}</p>
         </div>
       </motion.div>
     </Link>
