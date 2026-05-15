@@ -1,20 +1,24 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# Reflect
 
-# Run and deploy your AI Studio app
+Reflect is a minimalist personal journaling and reflection application designed to help you capture your thoughts with clarity and mindfulness. It provides a focused writing environment combined with insightful metrics to help you understand your patterns over time.
 
-This contains everything you need to run your app locally.
+## ✨ Features
 
-View your app in AI Studio: https://ai.studio/apps/b0ca70bd-db56-403a-95cd-65f0f34f93b1
+- **Personalized Onboarding**: Get started quickly with a setup process tailored to you.
+- **Rich Text Journaling**: A distraction-free writing experience powered by the Tiptap editor.
+- **Mood Tracking**: Log your emotional state with each entry to track your wellbeing.
+- **Insights & Stats**: Visualize your journaling habits and mood trends with beautiful charts.
+- **Manual Dark Mode**: A fully integrated dark theme for comfortable low-light reflection.
+- **Privacy First**: All your data is stored locally in your browser using IndexedDB (Dexie), ensuring your private thoughts stay private.
+- **Fully Responsive**: Optimized for seamless use across mobile, tablet, and desktop devices.
+- **Smooth Animations**: A tactile and polished interface built with Motion.
 
-## Run Locally
+## 🚀 Tech Stack
 
-**Prerequisites:**  Node.js
-
-
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+- **Frontend**: React 18+ with Vite
+- **Styling**: Tailwind CSS
+- **Database**: Dexie.js (IndexedDB)
+- **Animations**: Motion (formerly Framer Motion)
+- **Icons**: Lucide React
+- **Editor**: Tiptap
+- **Routing**: React Router
