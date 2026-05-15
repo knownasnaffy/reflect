@@ -24,18 +24,30 @@ export function Navigation() {
     { name: "Profile", path: "/profile", icon: User },
   ];
 
+  const getIsActive = (path: string) => {
+    if (path === "/") {
+      return location.pathname === "/";
+    }
+    if (path === "/timeline") {
+      return location.pathname.startsWith("/timeline") || 
+             location.pathname.startsWith("/view") || 
+             location.pathname.startsWith("/write");
+    }
+    return location.pathname.startsWith(path);
+  };
+
   return (
     <>
       {/* Mobile Bottom Navigation */}
       <nav className="fixed bottom-0 left-0 right-0 z-50 flex items-center justify-around bg-white/80 p-4 shadow-t backdrop-blur-md md:hidden border-t border-gray-200">
         {links.map((link) => {
-          const isActive = location.pathname === link.path;
+          const isActive = getIsActive(link.path);
           return (
             <Link
               key={link.name}
               to={link.path}
               className={`relative flex flex-col items-center gap-1 ${
-                isActive ? "text-blue-600" : "text-gray-500 hover:text-gray-900"
+                isActive ? "text-indigo-600" : "text-gray-500 hover:text-gray-900"
               }`}
             >
               <link.icon className="h-6 w-6" />
@@ -43,7 +55,7 @@ export function Navigation() {
               {isActive && (
                 <motion.div
                   layoutId="mobile-nav-pill"
-                  className="absolute -top-4 h-1 w-8 rounded-full bg-blue-600"
+                  className="absolute -top-4 h-1 w-8 rounded-full bg-indigo-600"
                 />
               )}
             </Link>
@@ -55,28 +67,28 @@ export function Navigation() {
       <nav className="hidden h-screen w-64 flex-col border-r border-gray-200 bg-white shadow-sm md:flex sticky top-0">
         <div className="p-6 flex items-center justify-between">
           <h1 className="text-2xl font-bold tracking-tight text-gray-900">Reflect</h1>
-          <button 
-            onClick={handleAddEntry}
-            className="p-2 rounded-full bg-blue-50 text-blue-600 hover:bg-blue-100 transition-colors"
+          <Link 
+            to="/write"
+            className="p-2 rounded-full bg-indigo-50 text-indigo-600 hover:bg-indigo-100 transition-colors"
           >
             <Plus className="h-5 w-5" />
-          </button>
+          </Link>
         </div>
         <div className="flex flex-1 flex-col gap-2 p-4">
           {links.map((link) => {
-            const isActive = location.pathname === link.path;
+            const isActive = getIsActive(link.path);
             return (
               <Link
                 key={link.name}
                 to={link.path}
                 className={`relative flex items-center gap-3 rounded-xl px-4 py-3 transition-colors ${
-                  isActive ? "text-blue-600" : "text-gray-500 hover:bg-gray-50 hover:text-gray-900"
+                  isActive ? "text-indigo-600" : "text-gray-500 hover:bg-gray-50 hover:text-gray-900"
                 }`}
               >
                 {isActive && (
                   <motion.div
                     layoutId="desktop-nav-pill"
-                    className="absolute inset-0 rounded-xl bg-blue-50"
+                    className="absolute inset-0 rounded-xl bg-indigo-50"
                   />
                 )}
                 <link.icon className="relative z-10 h-5 w-5" />

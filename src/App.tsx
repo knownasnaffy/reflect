@@ -9,6 +9,8 @@ import { Navigation } from "./components/Navigation";
 import { Home } from "./screens/Home";
 import { Timeline } from "./screens/Timeline";
 import { Profile } from "./screens/Profile";
+import { Write } from "./screens/Write";
+import { ViewEntry } from "./screens/ViewEntry";
 import { seedDatabase } from "./lib/db";
 
 function AnimatedRoutes() {
@@ -16,11 +18,13 @@ function AnimatedRoutes() {
   
   return (
     <AnimatePresence mode="wait">
-      {/* @ts-expect-error React 19 typing compatibility for key */}
       <Routes location={location} key={location.pathname}>
         <Route path="/" element={<Home />} />
         <Route path="/timeline" element={<Timeline />} />
         <Route path="/profile" element={<Profile />} />
+        <Route path="/write" element={<Write />} />
+        <Route path="/write/:id" element={<Write />} />
+        <Route path="/view/:id" element={<ViewEntry />} />
       </Routes>
     </AnimatePresence>
   );

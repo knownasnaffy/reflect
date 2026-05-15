@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { useLiveQuery } from "dexie-react-hooks";
 import { AnimatedScreen } from "../components/AnimatedScreen";
 import { db } from "../lib/db";
@@ -36,9 +37,12 @@ export function Timeline() {
                 </div>
                 <div className="flex flex-col justify-center">
                   <p className="text-gray-600 leading-relaxed">{item.description}</p>
-                  <button className="mt-6 self-start text-sm font-semibold text-indigo-600 hover:text-indigo-700 transition-colors">
+                  <Link 
+                    to={`/view/${item.id}`}
+                    className="mt-6 self-start text-sm font-semibold text-indigo-600 hover:text-indigo-700 transition-colors"
+                  >
                     Read Full Entry →
-                  </button>
+                  </Link>
                 </div>
               </div>
             </div>

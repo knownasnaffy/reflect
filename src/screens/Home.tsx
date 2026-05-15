@@ -1,25 +1,15 @@
+import { Link, useNavigate } from "react-router-dom";
 import { useLiveQuery } from "dexie-react-hooks";
 import { AnimatedScreen } from "../components/AnimatedScreen";
 import { SharedCard } from "../components/SharedCard";
 import { db } from "../lib/db";
 
 export function Home() {
+  const navigate = useNavigate();
   const entries = useLiveQuery(() => db.entries.reverse().limit(2).toArray());
   const totalCount = useLiveQuery(() => db.entries.count());
 
   if (!entries) return null;
-
-  const handleStartWriting = async () => {
-    const newEntry = {
-      title: "Feeling Productive",
-      description: "Implemented a real database today and everything feels much more solid.",
-      content: "Deep diving into IndexedDB and Dexie was a great choice. The data is now persistent!",
-      imageUrl: "https://images.unsplash.com/photo-1488190211105-8b0e65b80b4e?auto=format&fit=crop&q=80&w=800",
-      date: new Date().toISOString().split('T')[0],
-      createdAt: Date.now(),
-    };
-    await db.entries.add(newEntry);
-  };
 
   return (
     <AnimatedScreen>
@@ -38,12 +28,12 @@ export function Home() {
               <h2 className="mt-4 text-2xl font-bold sm:text-3xl italic">
                 "What is one small thing that made you smile today?"
               </h2>
-              <button 
-                onClick={handleStartWriting}
-                className="mt-8 flex items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-semibold text-indigo-600 shadow-sm transition-transform hover:scale-105 active:scale-95"
+              <Link 
+                to="/write"
+                className="mt-8 inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-semibold text-indigo-600 shadow-sm transition-transform hover:scale-105 active:scale-95"
               >
                 Start Writing
-              </button>
+              </Link>
             </div>
             {/* Decorative background element */}
             <div className="absolute -bottom-12 -right-12 h-64 w-64 rounded-full bg-indigo-500/30 blur-3xl" />
