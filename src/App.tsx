@@ -12,6 +12,7 @@ import { Timeline } from "./screens/Timeline";
 import { Profile } from "./screens/Profile";
 import { Write } from "./screens/Write";
 import { ViewEntry } from "./screens/ViewEntry";
+import { LockScreen } from "./components/LockScreen";
 import { Onboarding } from "./screens/Onboarding";
 import { db } from "./lib/db";
 
@@ -121,6 +122,7 @@ function AppLayout({ profile }: { profile: any }) {
 
   return (
     <div className="flex min-h-screen bg-gray-50 dark:bg-gray-900 md:flex-row transition-colors duration-300 w-full">
+      <LockScreen />
       <Navigation />
       <main className="flex w-full flex-col overflow-x-hidden md:h-screen md:overflow-y-auto">
         <AnimatedRoutes />

@@ -6,6 +6,7 @@ import { db } from "../lib/db";
 import { motion, AnimatePresence } from "motion/react";
 import { Portal } from "../components/Portal";
 import { calculateMaxStreak } from "../lib/stats";
+import { PasscodeInput } from "../components/PasscodeInput";
 
 export function Profile() {
   const profile = useLiveQuery(() => db.settings.get('current_user'));
@@ -14,6 +15,9 @@ export function Profile() {
   const [isEditingName, setIsEditingName] = useState(false);
   const [newName, setNewName] = useState("");
   const [isDataModalOpen, setIsDataModalOpen] = useState(false);
+  const [isSecurityModalOpen, setIsSecurityModalOpen] = useState(false);
+  const [passcodeStep, setPasscodeStep] = useState<"verify" | "setup">("setup");
+  const [securityError, setSecurityError] = useState("");
 
   const totalEntries = entries?.length || 0;
   const totalWords = entries?.reduce((acc, entry) => acc + (entry.content?.split(/\s+/).length || 0), 0) || 0;
@@ -32,9 +36,41 @@ export function Profile() {
   const toggleDarkMode = async () => {
     if (profile) {
       const nextValue = !profile.darkMode;
-      console.log("Setting darkMode to:", nextValue);
       await db.settings.update('current_user', { darkMode: nextValue });
     }
+  };
+
+  const handlePasscodeComplete = async (code: string) => {
+    if (passcodeStep === "verify") {
+      if (code === profile?.passcode) {
+        setPasscodeStep("setup");
+        setSecurityError("");
+      } else {
+        setSecurityError("Incorrect passcode. Try again.");
+      }
+    } else {
+      await db.settings.update('current_user', { passcode: code });
+      sessionStorage.setItem("reflect_authenticated", "true");
+      setIsSecurityModalOpen(false);
+      setSecurityError("");
+    }
+  };
+
+  const removePasscode = async () => {
+    if (confirm("Are you sure you want to remove the passcode lock?")) {
+      await db.settings.update('current_user', { passcode: undefined });
+      setIsSecurityModalOpen(false);
+    }
+  };
+
+  const openSecurityModal = () => {
+    if (profile?.passcode) {
+      setPasscodeStep("verify");
+    } else {
+      setPasscodeStep("setup");
+    }
+    setSecurityError("");
+    setIsSecurityModalOpen(true);
   };
 
   const handleEditName = () => {
@@ -79,7 +115,13 @@ export function Profile() {
       active: profile?.darkMode,
       onClick: toggleDarkMode
     },
-    { icon: Lock, label: "Passcode Lock", description: "Keep your thoughts private", type: "button", onClick: () => {} },
+    { 
+      icon: Lock, 
+      label: "Passcode Lock", 
+      description: profile?.passcode ? "Lock is active" : "Keep your thoughts private", 
+      type: "button", 
+      onClick: openSecurityModal 
+    },
     { 
       icon: Shield, 
       label: "Privacy & Data", 
@@ -281,6 +323,74 @@ export function Profile() {
                   >
                     Close
                   </button>
+                </motion.div>
+              </div>
+            </Portal>
+          )}
+        </AnimatePresence>
+
+        {/* Security / Passcode Modal */}
+        <AnimatePresence>
+          {isSecurityModalOpen && (
+            <Portal>
+              <div className="fixed inset-0 z-[99999] flex items-end justify-center sm:items-center p-0 sm:p-4">
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  onClick={() => setIsSecurityModalOpen(false)}
+                  className="fixed inset-0 bg-gray-900/60 backdrop-blur-md"
+                />
+                <motion.div
+                  initial={{ y: "100%", opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  exit={{ y: "100%", opacity: 0 }}
+                  className="relative z-[100000] w-full max-w-sm rounded-t-[32px] sm:rounded-3xl bg-white dark:bg-gray-800 p-8 shadow-2xl ring-1 ring-black/5"
+                >
+                  <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-2xl bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400">
+                    <Lock className="h-8 w-8" />
+                  </div>
+                  
+                  <h3 className="mb-2 text-xl font-bold text-gray-900 dark:text-white">
+                    {passcodeStep === "verify" ? "Verify identity" : profile?.passcode ? "Change passcode" : "Setup passcode"}
+                  </h3>
+                  <p className="mb-10 text-gray-500 dark:text-gray-400 text-sm">
+                    {passcodeStep === "verify" 
+                      ? "Enter your current passcode to continue." 
+                      : "Enter a 6-digit alphanumeric code to secure your entries."}
+                  </p>
+
+                  <motion.div
+                    animate={securityError ? { x: [-10, 10, -10, 10, 0] } : {}}
+                    transition={{ duration: 0.4 }}
+                  >
+                    <PasscodeInput 
+                      key={passcodeStep} 
+                      onComplete={handlePasscodeComplete} 
+                    />
+                  </motion.div>
+
+                  {securityError && (
+                    <p className="mt-4 text-center text-sm font-medium text-red-500">{securityError}</p>
+                  )}
+
+                  <div className="mt-10 flex flex-col gap-3">
+                    {passcodeStep === "setup" && profile?.passcode && (
+                      <button
+                        onClick={removePasscode}
+                        className="w-full flex items-center justify-center gap-2 rounded-xl bg-red-50 dark:bg-red-900/20 px-4 py-3 text-sm font-semibold text-red-600 dark:text-red-400 transition-colors hover:bg-red-100 dark:hover:bg-red-900/40"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                        Remove Passcode
+                      </button>
+                    )}
+                    <button
+                      onClick={() => setIsSecurityModalOpen(false)}
+                      className="w-full rounded-xl bg-gray-100 dark:bg-gray-700 px-4 py-3 text-sm font-semibold text-gray-900 dark:text-white transition-colors hover:bg-gray-200 dark:hover:bg-gray-600"
+                    >
+                      Cancel
+                    </button>
+                  </div>
                 </motion.div>
               </div>
             </Portal>

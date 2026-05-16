@@ -1,10 +1,17 @@
 import { Link, useLocation } from "react-router-dom";
-import { Home, Calendar, User, Plus } from "lucide-react";
+import { Home, Calendar, User, Plus, Lock } from "lucide-react";
 import { motion } from "motion/react";
+import { useLiveQuery } from "dexie-react-hooks";
 import { db } from "../lib/db";
 
 export function Navigation() {
   const location = useLocation();
+  const profile = useLiveQuery(() => db.settings.get('current_user'));
+  const hasPasscode = !!profile?.passcode;
+
+  const handleLock = () => {
+    window.dispatchEvent(new CustomEvent("reflect-lock"));
+  };
 
   const handleAddEntry = async () => {
     const newEntry = {
@@ -61,6 +68,15 @@ export function Navigation() {
             </Link>
           );
         })}
+        {hasPasscode && (
+          <button
+            onClick={handleLock}
+            className="flex flex-col items-center gap-1 text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200"
+          >
+            <Lock className="h-6 w-6" />
+            <span className="text-[10px] font-medium">Lock</span>
+          </button>
+        )}
       </nav>
 
       {/* Desktop Side Navigation */}
@@ -97,6 +113,18 @@ export function Navigation() {
             );
           })}
         </div>
+        
+        {hasPasscode && (
+          <div className="mt-auto p-4 border-t border-gray-100 dark:border-gray-700/50">
+            <button
+              onClick={handleLock}
+              className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700/50 hover:text-gray-900 dark:hover:text-gray-200 transition-colors"
+            >
+              <Lock className="h-5 w-5" />
+              <span className="font-medium">Lock App</span>
+            </button>
+          </div>
+        )}
       </nav>
     </>
   );

@@ -4,6 +4,7 @@ export interface UserProfile {
   avatarUrl: string;
   darkMode: boolean;
   createdAt: number;
+  passcode?: string;
 }
 
 export interface JournalEntry {
