@@ -23,7 +23,8 @@ export const seedDatabase = async () => {
       id: 'current_user',
       name: 'Jane Doe',
       avatarUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=200',
-      darkMode: false
+      darkMode: false,
+      createdAt: new Date("2024-01-01").getTime()
     });
   }
 

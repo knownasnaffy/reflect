@@ -27,24 +27,25 @@ export function Timeline() {
                 <h2 className="text-2xl font-bold text-gray-900 dark:text-white transition-colors">{item.title}</h2>
               </div>
 
-              <div className="grid gap-6 md:grid-cols-2 bg-white dark:bg-gray-800 p-4 rounded-2xl ring-1 ring-gray-200 dark:ring-gray-700 shadow-sm hover:shadow-md dark:hover:shadow-indigo-900/10 transition-all">
+              <Link 
+                to={`/view/${item.id}`}
+                className="grid gap-6 md:grid-cols-2 bg-white dark:bg-gray-800 p-4 rounded-2xl ring-1 ring-gray-200 dark:ring-gray-700 shadow-sm hover:shadow-md dark:hover:shadow-indigo-900/10 transition-all group"
+              >
                 <div className="aspect-[16/9] w-full overflow-hidden rounded-xl bg-gray-100 dark:bg-gray-700">
                   <img
                     src={item.imageUrl}
                     alt={item.title}
-                    className="h-full w-full object-cover"
+                    className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                   />
                 </div>
                 <div className="flex flex-col justify-center">
-                  <p className="text-gray-600 dark:text-gray-400 leading-relaxed transition-colors">{item.description}</p>
-                  <Link 
-                    to={`/view/${item.id}`}
-                    className="mt-6 self-start text-sm font-semibold text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 transition-colors"
-                  >
-                    Read Full Entry →
-                  </Link>
+                  <p className="text-gray-600 dark:text-gray-400 leading-relaxed transition-colors line-clamp-4">{item.description}</p>
+                  <div className="mt-6 flex items-center gap-2 text-sm font-semibold text-indigo-600 dark:text-indigo-400 group-hover:translate-x-1 transition-transform">
+                    <span>Read Full Entry</span>
+                    <span className="text-lg">→</span>
+                  </div>
                 </div>
-              </div>
+              </Link>
             </div>
           ))}
         </div>

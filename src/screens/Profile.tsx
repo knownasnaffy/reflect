@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { useLiveQuery } from "dexie-react-hooks";
 import { AnimatedScreen } from "../components/AnimatedScreen";
-import { Settings, Lock, Moon, Shield, Pencil, Save, Download, Trash2 } from "lucide-react";
+import { Settings, Lock, Moon, Shield, Pencil, Save, Download, Trash2, Award } from "lucide-react";
 import { db } from "../lib/db";
 import { motion, AnimatePresence } from "motion/react";
 import { Portal } from "../components/Portal";
+import { calculateMaxStreak } from "../lib/stats";
 
 export function Profile() {
   const profile = useLiveQuery(() => db.settings.get('current_user'));
@@ -15,13 +16,18 @@ export function Profile() {
   const [isDataModalOpen, setIsDataModalOpen] = useState(false);
 
   const totalEntries = entries?.length || 0;
-  const totalWords = entries?.reduce((acc, entry) => acc + entry.content.split(/\s+/).length, 0) || 0;
+  const totalWords = entries?.reduce((acc, entry) => acc + (entry.content?.split(/\s+/).length || 0), 0) || 0;
+  const maxStreak = entries ? calculateMaxStreak(entries) : 0;
   
   const profileStats = [
     { label: "Entries", value: totalEntries.toString() },
     { label: "Words", value: totalWords > 1000 ? `${(totalWords / 1000).toFixed(1)}k` : totalWords.toString() },
-    { label: "Streak", value: "12d" },
+    { label: "Best Streak", value: `${maxStreak}d` },
   ];
+
+  const writingSince = profile?.createdAt 
+    ? new Date(profile.createdAt).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })
+    : "January 2024";
 
   const toggleDarkMode = async () => {
     if (profile) {
@@ -113,7 +119,7 @@ export function Profile() {
                   <Pencil className="h-4 w-4" />
                 </button>
               </div>
-              <p className="text-gray-500 dark:text-gray-400 text-sm">Writing since January 2024</p>
+              <p className="text-gray-500 dark:text-gray-400 text-sm">Writing since {writingSince}</p>
             </div>
 
             <div className="mt-8 grid grid-cols-3 gap-4 border-t border-gray-100 dark:border-gray-700 pt-8">
@@ -180,7 +186,7 @@ export function Profile() {
                   initial={{ y: "100%", opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
                   exit={{ y: "100%", opacity: 0 }}
-                  className="relative z-[100000] w-full max-w-sm rounded-t-[32px] sm:rounded-[40px] bg-white dark:bg-gray-800 p-8 shadow-2xl ring-1 ring-black/5"
+                  className="relative z-[100000] w-full max-w-sm rounded-t-[32px] sm:rounded-3xl bg-white dark:bg-gray-800 p-8 shadow-2xl ring-1 ring-black/5"
                 >
                   <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-2xl bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400">
                     <Pencil className="h-8 w-8" />
@@ -233,7 +239,7 @@ export function Profile() {
                   initial={{ y: "100%", opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
                   exit={{ y: "100%", opacity: 0 }}
-                  className="relative z-[100000] w-full max-w-sm rounded-t-[32px] sm:rounded-[40px] bg-white dark:bg-gray-800 p-8 shadow-2xl ring-1 ring-black/5"
+                  className="relative z-[100000] w-full max-w-sm rounded-t-[32px] sm:rounded-3xl bg-white dark:bg-gray-800 p-8 shadow-2xl ring-1 ring-black/5"
                 >
                   <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-2xl bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400">
                     <Shield className="h-8 w-8" />

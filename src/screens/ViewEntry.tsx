@@ -38,7 +38,7 @@ export function ViewEntry() {
 
   return (
     <AnimatedScreen>
-      <div className="mx-auto max-w-3xl">
+      <div className="mx-auto max-w-4xl">
         <AnimatePresence>
           {showDeleteConfirm && (
             <Portal>
@@ -84,7 +84,7 @@ export function ViewEntry() {
         <header className="mb-8 flex items-center justify-between">
           <button
             onClick={() => navigate(-1)}
-            className="flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium text-gray-500 dark:text-gray-400 transition-colors hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-gray-200"
+            className="flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-medium text-gray-500 dark:text-gray-400 transition-colors hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-gray-200"
           >
             <ArrowLeft className="h-4 w-4" />
             Back
@@ -92,7 +92,7 @@ export function ViewEntry() {
           <div className="flex items-center gap-2">
             <button
               onClick={() => setShowDeleteConfirm(true)}
-              className="p-2 rounded-full text-gray-400 dark:text-gray-500 hover:bg-red-50 dark:hover:bg-red-900/30 hover:text-red-600 dark:hover:text-red-400 transition-colors"
+              className="p-2 rounded-xl text-gray-400 dark:text-gray-500 hover:bg-red-50 dark:hover:bg-red-900/30 hover:text-red-600 dark:hover:text-red-400 transition-colors"
               title="Delete Entry"
             >
               <Trash2 className="h-5 w-5" />
@@ -107,7 +107,7 @@ export function ViewEntry() {
           </div>
         </header>
 
-        <article className="overflow-hidden rounded-[40px] bg-white dark:bg-gray-800 shadow-sm ring-1 ring-gray-200 dark:ring-gray-700 transition-colors">
+        <article className="overflow-hidden rounded-3xl bg-white dark:bg-gray-800 shadow-sm ring-1 ring-gray-200 dark:ring-gray-700 transition-colors">
           <div className="aspect-video w-full overflow-hidden bg-gray-100 dark:bg-gray-700">
             <img
               src={entry.imageUrl}

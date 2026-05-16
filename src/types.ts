@@ -3,6 +3,7 @@ export interface UserProfile {
   name: string;
   avatarUrl: string;
   darkMode: boolean;
+  createdAt: number;
 }
 
 export interface JournalEntry {

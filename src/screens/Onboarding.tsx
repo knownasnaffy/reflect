@@ -19,7 +19,8 @@ export function Onboarding() {
         id: 'current_user',
         name: name.trim(),
         avatarUrl: `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(name.trim())}`,
-        darkMode: false
+        darkMode: false,
+        createdAt: Date.now()
       });
       navigate("/");
     } catch (error) {
@@ -46,7 +47,7 @@ export function Onboarding() {
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="w-full max-w-md bg-white dark:bg-gray-800 rounded-[40px] p-8 md:p-12 shadow-xl shadow-gray-200/50 dark:shadow-none ring-1 ring-black/5"
+        className="w-full max-w-md bg-white dark:bg-gray-800 rounded-3xl p-8 md:p-12 shadow-xl shadow-gray-200/50 dark:shadow-none ring-1 ring-black/5"
       >
         <div className="mb-8 flex h-16 w-16 items-center justify-center rounded-2xl bg-indigo-600 text-white shadow-lg shadow-indigo-200 dark:shadow-none">
           <Sparkles className="h-8 w-8" />

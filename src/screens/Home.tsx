@@ -1,16 +1,20 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useLiveQuery } from "dexie-react-hooks";
 import { AnimatedScreen } from "../components/AnimatedScreen";
 import { SharedCard } from "../components/SharedCard";
 import { db } from "../lib/db";
+import { calculateCurrentStreak, calculateEntriesThisWeek } from "../lib/stats";
 
 export function Home() {
-  const navigate = useNavigate();
   const profile = useLiveQuery(() => db.settings.get('current_user'));
-  const entries = useLiveQuery(() => db.entries.reverse().limit(2).toArray());
+  const allEntries = useLiveQuery(() => db.entries.toArray());
+  const recentEntries = useLiveQuery(() => db.entries.reverse().limit(2).toArray());
   const totalCount = useLiveQuery(() => db.entries.count());
 
-  if (!entries) return null;
+  const currentStreak = allEntries ? calculateCurrentStreak(allEntries) : 0;
+  const entriesThisWeek = allEntries ? calculateEntriesThisWeek(allEntries) : 0;
+
+  if (!recentEntries) return null;
 
   return (
     <AnimatedScreen>
@@ -49,7 +53,7 @@ export function Home() {
               <h2 className="text-xl font-semibold text-gray-900 dark:text-white transition-colors">Featured Entries</h2>
             </div>
             <div className="grid gap-6 sm:grid-cols-2">
-              {entries.map((item) => (
+              {recentEntries.map((item) => (
                 <SharedCard 
                   key={item.id} 
                   {...item} 
@@ -65,23 +69,28 @@ export function Home() {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Current Streak</p>
-                  <p className="text-2xl font-bold text-gray-900 dark:text-white">12 Days</p>
+                  <p className="text-2xl font-bold text-gray-900 dark:text-white">{currentStreak} {currentStreak === 1 ? 'Day' : 'Days'}</p>
                 </div>
                 <div className="h-10 w-10 rounded-full bg-orange-100 dark:bg-orange-900/30 flex items-center justify-center text-orange-600">
                   <span className="text-xl">🔥</span>
                 </div>
               </div>
               <div className="mt-4 h-2 w-full rounded-full bg-gray-100 dark:bg-gray-700">
-                <div className="h-full w-[60%] rounded-full bg-orange-500" />
+                <div 
+                  className="h-full rounded-full bg-orange-500 transition-all duration-1000"
+                  style={{ width: `${Math.min((currentStreak / 10) * 100, 100)}%` }}
+                />
               </div>
-              <p className="mt-2 text-xs text-gray-400 dark:text-gray-500">Keep it up! 3 days to your next milestone.</p>
+              <p className="mt-2 text-xs text-gray-400 dark:text-gray-500">
+                {currentStreak === 0 ? "Start a new streak today!" : `Keep it up! ${10 - (currentStreak % 10)} days to your next milestone.`}
+              </p>
             </div>
 
             <div className="rounded-2xl bg-white dark:bg-gray-800 p-6 shadow-sm ring-1 ring-gray-200 dark:ring-gray-700 transition-colors">
               <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Total Entries</p>
               <p className="text-2xl font-bold text-gray-900 dark:text-white">{totalCount || 0}</p>
               <div className="mt-2 flex items-center gap-1 text-xs text-green-600 dark:text-green-400">
-                <span>+4 this week</span>
+                <span>+{entriesThisWeek} this week</span>
               </div>
             </div>
           </div>

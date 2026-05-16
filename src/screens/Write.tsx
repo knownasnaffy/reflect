@@ -105,7 +105,7 @@ export function Write() {
           </button>
         </header>
 
-        <div className="rounded-[40px] bg-white dark:bg-gray-800 p-6 md:p-10 shadow-sm ring-1 ring-gray-200 dark:ring-gray-700 transition-colors">
+        <div className="rounded-3xl bg-white dark:bg-gray-800 p-6 md:p-10 shadow-sm ring-1 ring-gray-200 dark:ring-gray-700 transition-colors">
           <input
             type="text"
             placeholder="Title of your reflection..."
