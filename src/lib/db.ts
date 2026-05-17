@@ -1,5 +1,6 @@
 import Dexie, { type Table } from 'dexie';
 import { JournalEntry, UserProfile } from '../types';
+import { avatarSvgs, getAvatarDataUrl } from './avatars';
 
 export class ReflectDatabase extends Dexie {
   entries!: Table<JournalEntry>;
@@ -22,7 +23,7 @@ export const seedDatabase = async () => {
     await db.settings.add({
       id: 'current_user',
       name: 'Jane Doe',
-      avatarUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=200',
+      avatarUrl: getAvatarDataUrl(avatarSvgs[0]),
       darkMode: false,
       createdAt: new Date("2024-01-01").getTime()
     });

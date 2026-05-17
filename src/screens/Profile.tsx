@@ -16,7 +16,9 @@ export function Profile() {
   const [newName, setNewName] = useState("");
   const [isDataModalOpen, setIsDataModalOpen] = useState(false);
   const [isSecurityModalOpen, setIsSecurityModalOpen] = useState(false);
-  const [passcodeStep, setPasscodeStep] = useState<"verify" | "setup">("setup");
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [deleteStep, setDeleteStep] = useState<1 | 2>(1);
+  const [passcodeStep, setPasscodeStep] = useState<"verify" | "setup" | "remove">("setup");
   const [securityError, setSecurityError] = useState("");
 
   const totalEntries = entries?.length || 0;
@@ -57,10 +59,13 @@ export function Profile() {
   };
 
   const removePasscode = async () => {
-    if (confirm("Are you sure you want to remove the passcode lock?")) {
-      await db.settings.update('current_user', { passcode: undefined });
-      setIsSecurityModalOpen(false);
+    if (passcodeStep !== "remove") {
+      setPasscodeStep("remove");
+      return;
     }
+    await db.settings.update('current_user', { passcode: undefined });
+    sessionStorage.removeItem("reflect_authenticated");
+    setIsSecurityModalOpen(false);
   };
 
   const openSecurityModal = () => {
@@ -99,13 +104,15 @@ export function Profile() {
     URL.revokeObjectURL(url);
   };
 
-  const deleteAllData = async () => {
-    if (confirm("This will permanently delete all your entries and settings. Are you absolutely sure?")) {
-      if (confirm("This action cannot be undone. Are you really sure you want to wipe out all data?")) {
-        await db.delete();
-        window.location.href = "/";
-      }
-    }
+  const executeDeleteAllData = async () => {
+    await db.delete();
+    window.location.href = "/";
+  };
+
+  const startDeleteProcess = () => {
+    setIsDataModalOpen(false);
+    setDeleteStep(1);
+    setIsDeleteModalOpen(true);
   };
 
   const settingsOptions = [
@@ -306,7 +313,7 @@ export function Profile() {
                     </button>
 
                     <button
-                      onClick={deleteAllData}
+                      onClick={startDeleteProcess}
                       className="w-full flex items-center justify-between rounded-2xl bg-red-50 dark:bg-red-900/20 p-4 text-left group"
                     >
                       <div className="flex items-center gap-3">
@@ -325,6 +332,62 @@ export function Profile() {
                   >
                     Close
                   </button>
+                </motion.div>
+              </div>
+            </Portal>
+          )}
+        </AnimatePresence>
+
+        {/* Delete Confirmation Modal */}
+        <AnimatePresence>
+          {isDeleteModalOpen && (
+            <Portal>
+              <div className="fixed inset-0 z-[99999] flex items-end justify-center sm:items-center p-0 sm:p-4">
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  onClick={() => setIsDeleteModalOpen(false)}
+                  className="fixed inset-0 bg-gray-900/60 backdrop-blur-md"
+                />
+                <motion.div
+                  initial={{ y: "100%", opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  exit={{ y: "100%", opacity: 0 }}
+                  className="relative z-[100000] w-full max-w-sm rounded-t-[32px] sm:rounded-3xl bg-white dark:bg-gray-800 p-8 shadow-2xl ring-1 ring-black/5 flex flex-col items-center text-center"
+                >
+                  <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/40 text-red-600 dark:text-red-400">
+                    <Trash2 className="h-8 w-8" />
+                  </div>
+                  <h3 className="mb-2 text-xl font-bold text-gray-900 dark:text-white">
+                    {deleteStep === 1 ? "Wipe local data?" : "Are you absolutely sure?"}
+                  </h3>
+                  <p className="mb-8 text-gray-500 dark:text-gray-400 text-sm">
+                    {deleteStep === 1 
+                      ? "This will delete all your entries, settings, and streaks from this device." 
+                      : "This action is completely irreversible. All your journal entries will be lost forever."}
+                  </p>
+                  
+                  <div className="w-full space-y-3">
+                    <button
+                      onClick={() => {
+                        if (deleteStep === 1) {
+                          setDeleteStep(2);
+                        } else {
+                          executeDeleteAllData();
+                        }
+                      }}
+                      className="w-full rounded-xl bg-red-600 px-4 py-3 text-sm font-bold text-white transition-colors hover:bg-red-700 shadow-sm"
+                    >
+                      {deleteStep === 1 ? "Yes, wipe it out" : "Confirm permanent deletion"}
+                    </button>
+                    <button
+                      onClick={() => setIsDeleteModalOpen(false)}
+                      className="w-full rounded-xl bg-gray-100 dark:bg-gray-700 px-4 py-3 text-sm font-semibold text-gray-900 dark:text-white transition-colors hover:bg-gray-200 dark:hover:bg-gray-600"
+                    >
+                      Cancel
+                    </button>
+                  </div>
                 </motion.div>
               </div>
             </Portal>
@@ -354,25 +417,29 @@ export function Profile() {
                   </div>
                   
                   <h3 className="mb-2 text-xl font-bold text-gray-900 dark:text-white">
-                    {passcodeStep === "verify" ? "Verify identity" : profile?.passcode ? "Change passcode" : "Setup passcode"}
+                    {passcodeStep === "verify" ? "Verify identity" : passcodeStep === "remove" ? "Remove passcode" : profile?.passcode ? "Change passcode" : "Setup passcode"}
                   </h3>
                   <p className="mb-10 text-gray-500 dark:text-gray-400 text-sm">
                     {passcodeStep === "verify" 
                       ? "Enter your current passcode to continue." 
+                      : passcodeStep === "remove"
+                      ? "Are you sure you want to remove the passcode lock?"
                       : "Enter a 6-digit alphanumeric code to secure your entries."}
                   </p>
 
-                  <motion.div
-                    animate={securityError ? { x: [-10, 10, -10, 10, 0] } : {}}
-                    transition={{ duration: 0.4 }}
-                  >
-                    <PasscodeInput 
-                      key={passcodeStep} 
-                      onComplete={handlePasscodeComplete} 
-                    />
-                  </motion.div>
+                  {passcodeStep !== "remove" && (
+                    <motion.div
+                      animate={securityError ? { x: [-10, 10, -10, 10, 0] } : {}}
+                      transition={{ duration: 0.4 }}
+                    >
+                      <PasscodeInput 
+                        key={passcodeStep} 
+                        onComplete={handlePasscodeComplete} 
+                      />
+                    </motion.div>
+                  )}
 
-                  {securityError && (
+                  {securityError && passcodeStep !== "remove" && (
                     <p className="mt-4 text-center text-sm font-medium text-red-500">{securityError}</p>
                   )}
 
@@ -386,8 +453,22 @@ export function Profile() {
                         Remove Passcode
                       </button>
                     )}
+                    {passcodeStep === "remove" && (
+                      <button
+                        onClick={removePasscode}
+                        className="w-full flex items-center justify-center gap-2 rounded-xl bg-red-600 text-white px-4 py-3 text-sm font-semibold transition-colors hover:bg-red-700"
+                      >
+                        Yes, Remove
+                      </button>
+                    )}
                     <button
-                      onClick={() => setIsSecurityModalOpen(false)}
+                      onClick={() => {
+                        if (passcodeStep === "remove") {
+                          setPasscodeStep("setup");
+                        } else {
+                          setIsSecurityModalOpen(false);
+                        }
+                      }}
                       className="w-full rounded-xl bg-gray-100 dark:bg-gray-700 px-4 py-3 text-sm font-semibold text-gray-900 dark:text-white transition-colors hover:bg-gray-200 dark:hover:bg-gray-600"
                     >
                       Cancel

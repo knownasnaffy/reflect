@@ -1,21 +1,28 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "motion/react";
-import { Sparkles, ArrowRight, Database, Lock, ShieldCheck } from "lucide-react";
+import { Sparkles, ArrowRight, Database, Lock, ShieldCheck, UserCircle2 } from "lucide-react";
 import { db, seedDatabase } from "../lib/db";
 import { PasscodeInput } from "../components/PasscodeInput";
+import { avatarSvgs, getAvatarDataUrl } from "../lib/avatars";
 
-type OnboardingStep = "profile" | "passcode";
+type OnboardingStep = "profile" | "avatar" | "passcode";
 
 export function Onboarding() {
   const [step, setStep] = useState<OnboardingStep>("profile");
   const [name, setName] = useState("");
+  const [selectedAvatar, setSelectedAvatar] = useState<string>(getAvatarDataUrl(avatarSvgs[0]));
   const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
 
   const handleProfileSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!name.trim()) return;
+    setStep("avatar");
+  };
+
+  const handleAvatarSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
     setStep("passcode");
   };
 
@@ -28,7 +35,7 @@ export function Onboarding() {
       await db.settings.add({
         id: 'current_user',
         name: name.trim(),
-        avatarUrl: `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(name.trim())}`,
+        avatarUrl: selectedAvatar,
         darkMode: false,
         createdAt: Date.now(),
         passcode: passcode || undefined
@@ -115,6 +122,55 @@ export function Onboarding() {
               <Database className="h-4 w-4" />
               Continue with demo data
             </button>
+          </motion.div>
+        ) : step === "avatar" ? (
+          <motion.div
+            key="avatar"
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -20 }}
+            className="w-full max-w-md bg-white dark:bg-gray-800 rounded-3xl p-8 md:p-12 shadow-xl shadow-gray-200/50 dark:shadow-none ring-1 ring-black/5"
+          >
+            <div className="mb-8 flex h-16 w-16 items-center justify-center rounded-2xl bg-indigo-600 text-white shadow-lg shadow-indigo-200 dark:shadow-none">
+              <UserCircle2 className="h-8 w-8" />
+            </div>
+
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">Pick an avatar</h1>
+            <p className="text-gray-500 dark:text-gray-400 mb-8">Choose a profile picture that represents you best.</p>
+
+            <form onSubmit={handleAvatarSubmit} className="space-y-8">
+              <div className="flex gap-4 overflow-x-auto py-6 -my-6 px-4 -mx-4 snap-x snap-mandatory scrollbar-hide">
+                {avatarSvgs.map((svg, idx) => {
+                  const dataUrl = getAvatarDataUrl(svg);
+                  const isSelected = selectedAvatar === dataUrl;
+                  return (
+                    <button
+                      key={idx}
+                      type="button"
+                      onClick={() => setSelectedAvatar(dataUrl)}
+                      className={`relative flex-none w-32 aspect-square rounded-full overflow-hidden border-4 transition-all duration-200 snap-center ${
+                        isSelected 
+                          ? 'border-indigo-600 shadow-xl shadow-indigo-200 dark:shadow-none scale-105 mx-2' 
+                          : 'border-transparent hover:scale-[1.02] hover:shadow-md'
+                      }`}
+                    >
+                      <img src={dataUrl} alt={`Avatar option ${idx + 1}`} className="w-full h-full object-cover" />
+                    </button>
+                  );
+                })}
+              </div>
+
+              <div className="pt-8">
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="w-full flex items-center justify-center gap-2 rounded-2xl bg-indigo-600 py-4 text-sm font-bold text-white transition-all hover:bg-indigo-700 active:scale-[0.98] disabled:opacity-50 shadow-lg shadow-indigo-100 dark:shadow-none"
+                >
+                  Continue
+                  <ArrowRight className="h-4 w-4" />
+                </button>
+              </div>
+            </form>
           </motion.div>
         ) : (
           <motion.div
