@@ -8,8 +8,8 @@ Reflect is a minimalist personal journaling and reflection application designed 
 - **Rich Text Journaling**: A distraction-free writing experience powered by the Tiptap editor.
 - **Mood Tracking**: Log your emotional state with each entry to track your wellbeing.
 - **Insights & Stats**: Visualize your journaling habits and mood trends with beautiful charts.
-- **Manual Dark Mode**: A fully integrated dark theme for comfortable low-light reflection.
-- **Privacy First**: All your data is stored locally in your browser using IndexedDB (Dexie), ensuring your private thoughts stay private.
+- **Dark Mode**: A fully integrated dark theme for comfortable low-light reflection.
+- **Privacy First**: All your data is stored locally in your browser using IndexedDB (Dexie), and the app offers you to set a passcode for extended security.
 - **Fully Responsive**: Optimized for seamless use across mobile, tablet, and desktop devices.
 - **Smooth Animations**: A tactile and polished interface built with Motion.
 
@@ -60,7 +60,7 @@ Open [http://localhost:3000](http://localhost:3000) in your browser to view the 
 
 ## Contributing
 
-Contributions are welcome! Feel free to open an issue to report a bug or suggest an improvement, or submit a pull request with your changes. Since this is a demo project there are no strict contribution guidelines — just keep changes focused and descriptive.
+Contributions are welcome! Feel free to open an issue to report a bug or suggest an improvement, or submit a pull request with your changes. Since this is a demo project there are no strict contribution guidelines - just keep changes focused and descriptive.
 
 ## License
 
