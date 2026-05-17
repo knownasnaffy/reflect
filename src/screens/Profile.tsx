@@ -156,7 +156,7 @@ export function Profile() {
               <img
                 src={profile.avatarUrl}
                 alt={profile.name}
-                className="h-24 w-24 rounded-full border-4 border-white dark:border-gray-800 bg-white object-cover shadow-md sm:h-32 sm:w-32"
+                className="h-24 w-24 rounded-full bg-indigo-600 border-4 border-white dark:border-gray-800 bg-white object-cover shadow-md sm:h-32 sm:w-32"
               />
             </div>
             

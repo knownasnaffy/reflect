@@ -139,7 +139,7 @@ export function Onboarding() {
             <p className="text-gray-500 dark:text-gray-400 mb-8">Choose a profile picture that represents you best.</p>
 
             <form onSubmit={handleAvatarSubmit} className="space-y-8">
-              <div className="flex gap-4 overflow-x-auto py-6 -my-6 px-4 -mx-4 snap-x snap-mandatory scrollbar-hide">
+              <div className="flex gap-4 overflow-x-auto py-8 -my-6 px-4 -mx-4 snap-x snap-mandatory scrollbar-hide">
                 {avatarSvgs.map((svg, idx) => {
                   const dataUrl = getAvatarDataUrl(svg);
                   const isSelected = selectedAvatar === dataUrl;
@@ -148,10 +148,10 @@ export function Onboarding() {
                       key={idx}
                       type="button"
                       onClick={() => setSelectedAvatar(dataUrl)}
-                      className={`relative flex-none w-32 aspect-square rounded-full overflow-hidden border-4 transition-all duration-200 snap-center ${
+                      className={`relative flex-none w-24 aspect-square rounded-full bg-indigo-600 overflow-hidden border-4 transition-all duration-200 snap-center ${
                         isSelected 
                           ? 'border-indigo-600 shadow-xl shadow-indigo-200 dark:shadow-none scale-105 mx-2' 
-                          : 'border-transparent hover:scale-[1.02] hover:shadow-md'
+                          : 'border-white hover:scale-[1.02] hover:shadow-md'
                       }`}
                     >
                       <img src={dataUrl} alt={`Avatar option ${idx + 1}`} className="w-full h-full object-cover" />
