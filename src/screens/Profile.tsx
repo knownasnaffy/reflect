@@ -101,8 +101,10 @@ export function Profile() {
 
   const deleteAllData = async () => {
     if (confirm("This will permanently delete all your entries and settings. Are you absolutely sure?")) {
-      await db.delete();
-      window.location.href = "https://google.com";
+      if (confirm("This action cannot be undone. Are you really sure you want to wipe out all data?")) {
+        await db.delete();
+        window.location.href = "/";
+      }
     }
   };
 

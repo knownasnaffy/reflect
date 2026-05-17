@@ -13,6 +13,7 @@ export interface JournalEntry {
   description: string;
   content: string;
   imageUrl: string;
+  imageBlob?: Blob;
   date: string; // ISO string for sorting
   createdAt: number; // timestamp
 }

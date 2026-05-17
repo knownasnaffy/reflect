@@ -1,16 +1,18 @@
 import { Link } from "react-router-dom";
 import { motion } from "motion/react";
 import { Key } from "react";
+import { EntryThumbnail } from "./EntryThumbnail";
 
 interface SharedCardProps {
   key?: Key;
-  id: string;
+  id: string | number;
   imageUrl: string;
+  imageBlob?: Blob;
   title: string;
   description: string;
 }
 
-export function SharedCard({ id, imageUrl, title, description }: SharedCardProps) {
+export function SharedCard({ id, imageUrl, imageBlob, title, description }: SharedCardProps) {
   return (
     <Link to={`/view/${id}`}>
       <motion.div
@@ -18,8 +20,9 @@ export function SharedCard({ id, imageUrl, title, description }: SharedCardProps
         className="group relative flex flex-col overflow-hidden rounded-2xl bg-white dark:bg-gray-800 shadow-sm ring-1 ring-gray-200 dark:ring-gray-700 transition-all hover:shadow-md dark:hover:shadow-indigo-900/10 cursor-pointer"
       >
         <div className="aspect-[4/3] w-full overflow-hidden bg-gray-100 dark:bg-gray-700">
-          <img
-            src={imageUrl}
+          <EntryThumbnail
+            imageUrl={imageUrl}
+            imageBlob={imageBlob}
             alt={title}
             className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105 dark:opacity-90"
           />

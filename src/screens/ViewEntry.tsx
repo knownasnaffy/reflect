@@ -7,6 +7,7 @@ import { db } from "../lib/db";
 import { AnimatedScreen } from "../components/AnimatedScreen";
 import { JournalEntry } from "../types";
 import { Portal } from "../components/Portal";
+import { EntryThumbnail } from "../components/EntryThumbnail";
 
 export function ViewEntry() {
   const { id } = useParams();
@@ -109,8 +110,9 @@ export function ViewEntry() {
 
         <article className="overflow-hidden rounded-3xl bg-white dark:bg-gray-800 shadow-sm ring-1 ring-gray-200 dark:ring-gray-700 transition-colors">
           <div className="aspect-video w-full overflow-hidden bg-gray-100 dark:bg-gray-700">
-            <img
-              src={entry.imageUrl}
+            <EntryThumbnail
+              imageUrl={entry.imageUrl}
+              imageBlob={entry.imageBlob}
               alt={entry.title}
               className="h-full w-full object-cover transition-opacity duration-300 dark:opacity-90"
             />

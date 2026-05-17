@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { useLiveQuery } from "dexie-react-hooks";
 import { AnimatedScreen } from "../components/AnimatedScreen";
 import { db } from "../lib/db";
+import { EntryThumbnail } from "../components/EntryThumbnail";
 
 export function Timeline() {
   const entries = useLiveQuery(() => db.entries.reverse().toArray());
@@ -32,8 +33,9 @@ export function Timeline() {
                 className="grid gap-6 md:grid-cols-2 bg-white dark:bg-gray-800 p-4 rounded-2xl ring-1 ring-gray-200 dark:ring-gray-700 shadow-sm hover:shadow-md dark:hover:shadow-indigo-900/10 transition-all group"
               >
                 <div className="aspect-[16/9] w-full overflow-hidden rounded-xl bg-gray-100 dark:bg-gray-700">
-                  <img
-                    src={item.imageUrl}
+                  <EntryThumbnail
+                    imageUrl={item.imageUrl}
+                    imageBlob={item.imageBlob}
                     alt={item.title}
                     className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                   />
