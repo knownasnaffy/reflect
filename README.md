@@ -1,3 +1,5 @@
+<img width="1866" height="827" alt="Reflect" src="https://github.com/user-attachments/assets/f4fca8b6-c1c7-4821-9753-dc843e0ddae3" />
+
 # Reflect
 
 Reflect is a minimalist personal journaling and reflection application designed to help you capture your thoughts with clarity and mindfulness. It provides a focused writing environment combined with insightful metrics to help you understand your patterns over time.
